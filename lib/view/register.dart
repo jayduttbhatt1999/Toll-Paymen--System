@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'home.dart';
 import 'login.dart';
+
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class RegisterPage extends StatefulWidget {
@@ -125,6 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
     final contactField = TextField(
+      keyboardType: TextInputType.number,
       controller: _contactcontroller,
       style: TextStyle(
         color: Colors.white,
@@ -178,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         onPressed: () async {
           await Firebase.initializeApp();
-          Map <String,dynamic> data = {
+          Map<String, dynamic> data = {
             "User": _usernameController.text,
             "Car Company": _carcompController.text,
             "Car Model": _carmodelController.text,
@@ -191,7 +192,6 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       ),
     );
-
 
     final bottom = Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -229,13 +229,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.blueGrey[600],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          "Email Register",
+          style:
+              TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(right: 10,left: 10),
           child: Container(
-            height: mq.size.height,
+            height: 600,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[

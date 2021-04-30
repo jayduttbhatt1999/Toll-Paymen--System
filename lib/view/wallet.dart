@@ -1,90 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/services.dart';
 import 'package:vtps/feedback/Complain.dart';
 import 'package:vtps/feedback/feedback.dart';
-import 'package:vtps/view/wallet.dart';
+import 'package:vtps/view/payment.dart';
+import 'package:vtps/view/profile.dart';
 import 'home.dart';
 import 'listtoll.dart';
 import 'login.dart';
 
-class PaymentScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
-  int totalAmount = 0;
-  Razorpay _razorpay;
-  String _chosenValue;
-
-  TextEditingController textEditingController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _razorpay.clear();
-  }
-
-  void openCheckout() async {
-    var options = {
-      'key': 'rzp_test_5id9cE1UJlLcTD',
-      'amount': totalAmount * 100,
-      'name': 'Jay Bhatt',
-      'description': 'Toll Payment',
-      'prefill': {
-        'contact': '9999977777',
-        'email': 'jay@gmail.com',
-      },
-      'external': {
-        'wallets': ['paytm'],
-      }
-    };
-    try {
-      _razorpay.open(options);
-    } catch (e) {
-      debugPrint(e);
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print("Payment successfull");
-    Fluttertoast.showToast(msg: 'Success' + response.paymentId);
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    print("Payment Failure");
-    Fluttertoast.showToast(
-        msg: 'Error' + response.code.toString() + " . " + response.message);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    print("External Wallet");
-    Fluttertoast.showToast(msg: 'External Wallet' + response.walletName);
-  }
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Payment"),
         backgroundColor: Colors.blueGrey,
+        elevation: 0,
+        title: Text(
+          "Wallet",
+          style:
+              TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+        ),
       ),
       drawer: Drawer(
-        child: ListView(
+        child: new ListView(
           children: <Widget>[
-            UserAccountsDrawerHeader(
+            new UserAccountsDrawerHeader(
               accountName: null,
               accountEmail: null,
               decoration: new BoxDecoration(
@@ -98,12 +43,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     'assets/images/zero.jpg',
                   )),
             ),
-            ListTile(
+            new ListTile(
                 leading: Icon(
                   Icons.dashboard_outlined,
                   color: Colors.blueGrey[900],
                 ),
-                title: Text(
+                title: new Text(
                   "Dashboard",
                   style: TextStyle(
                     color: Colors.blueGrey[900],
@@ -118,12 +63,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     MaterialPageRoute(builder: (context) => HomeScreen()),
                   );
                 }),
-            ListTile(
+            new ListTile(
                 leading: Icon(
                   Icons.account_box_sharp,
                   color: Colors.blueGrey[900],
                 ),
-                title: Text(
+                title: new Text(
                   "User Profile",
                   style: TextStyle(
                     color: Colors.blueGrey[900],
@@ -132,13 +77,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () => Navigator.pop(context)),
-            ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
+                }),
+            new ListTile(
                 leading: Icon(
                   Icons.payment,
                   color: Colors.blueGrey[900],
                 ),
-                title: Text(
+                title: new Text(
                   "Payment",
                   style: TextStyle(
                     color: Colors.blueGrey[900],
@@ -151,12 +101,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => PaymentScreen()));
                 }),
-            ListTile(
+            new ListTile(
                 leading: Icon(
                   Icons.account_balance_wallet_rounded,
                   color: Colors.blueGrey[900],
                 ),
-                title: Text(
+                title: new Text(
                   "Wallet",
                   style: TextStyle(
                     color: Colors.blueGrey[900],
@@ -169,12 +119,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => HomePage()));
                 }),
-            ListTile(
+            new ListTile(
                 leading: Icon(
                   Icons.list,
                   color: Colors.blueGrey[900],
                 ),
-                title: Text(
+                title: new Text(
                   "Toll List",
                   style: TextStyle(
                     color: Colors.blueGrey[900],
@@ -183,8 +133,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () => Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ListToll()))),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => ListToll()));
+                }),
             new ListTile(
                 leading: Icon(
                   Icons.miscellaneous_services_outlined,
@@ -222,25 +174,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => Complain()));
                 }),
-            ListTile(
-              leading: Icon(
-                Icons.power_settings_new,
-                color: Colors.blueGrey[900],
-              ),
-              title: Text(
-                "Logout",
-                style: TextStyle(
+            new ListTile(
+                leading: Icon(
+                  Icons.power_settings_new,
                   color: Colors.blueGrey[900],
-                  fontSize: 18,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              ),
-            ),
+                title: new Text(
+                  "Logout",
+                  style: TextStyle(
+                    color: Colors.blueGrey[900],
+                    fontSize: 18,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                }),
           ],
         ),
       ),
@@ -252,6 +205,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Text(
+                  "Account Overview",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
                 Container(
                     //margin: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
@@ -371,87 +335,210 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Container(
+                  padding:
+                      EdgeInsets.only(left: 18, right: 18, top: 22, bottom: 22),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xffF1F3F6)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Container(
-                        width: 300,
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          itemHeight: 100,
-                          focusColor: Colors.white,
-                          value: _chosenValue,
-                          // elevation: 5,
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'robo'),
-                          iconEnabledColor: Colors.black,
-                          items: <String>[
-                            'Ahmedabad Vadodra Expressways 1 & 2',
-                            'N.H.8A Km 61.4 to Km 182.4 (Bagodara)',
-                            'Surat Dahisar (Bhagwada)',
-                            'Porbandar to Dwarka (Okhamadi)',
-                            'NE 01 (Vadodara)',
-                            'Porbander Bhiladi (Vanana)',
-                            'Ahmedabad - Vadodara (Vasad)',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                    color: Colors.black, fontFamily: 'robo'),
-                              ),
-                            );
-                          }).toList(),
-                          hint: Text(
-                            "Please Select Your Toll ",
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "500",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'robo',
-                                fontSize: 14,
+                              fontSize: 24,
+                              color: Color(0xff171822),
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Text(
+                            "Current Balance",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color(0xff3A4276).withOpacity(.4),
                                 fontWeight: FontWeight.w500),
                           ),
-                          onChanged: (String value) {
-                            setState(() {
-                              _chosenValue = value;
-                            });
-                          },
-                        ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      LimitedBox(
-                        maxWidth: 150.0,
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              hintText: 'Please enter amount',
-                              hintStyle: TextStyle(fontFamily: 'robo')),
-                          onChanged: (value) =>
-                              setState(() => totalAmount = num.parse(value)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      MaterialButton(
-                        color: Colors.blueGrey,
+                      RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => PaymentScreen()));
+                        },
+                        elevation: 0,
+                        padding: EdgeInsets.all(12),
                         child: Text(
-                          'Pay Now',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 22.0,
-                            fontFamily: 'robo',
-                            fontWeight: FontWeight.bold,
-                          ),
+                          "+",
+                          style:
+                              TextStyle(color: Color(0xff1B1D28), fontSize: 22),
                         ),
-                        onPressed: openCheckout,
+                        shape: CircleBorder(),
+                        color: Colors.blueGrey,
                       )
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Transaction Histroy",
+                  style: TextStyle(
+                    fontFamily: 'Montserratt',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xffF1F3F6)),
+                      padding: EdgeInsets.only(
+                          top: 20.0, bottom: 20.0, left: 5.0, right: 5.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Anand Toll Plaza",
+                                  style: TextStyle(fontSize: 16.0)),
+                              Text("₹ 150", style: TextStyle(fontSize: 16.0))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("28-05-2019",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0)),
+                              Text("Payment",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      padding: EdgeInsets.only(
+                          top: 20.0, bottom: 20.0, left: 5.0, right: 5.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("IRB Boriach",
+                                  style: TextStyle(fontSize: 16.0)),
+                              Text("₹ 200", style: TextStyle(fontSize: 16.0))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("15-07-2019",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0)),
+                              Text("Payment",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xffF1F3F6)),
+                      padding: EdgeInsets.only(
+                          top: 20.0, bottom: 20.0, left: 5.0, right: 5.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Ahmedabad Toll Plaza",
+                                  style: TextStyle(fontSize: 16.0)),
+                              Text("₹ 150", style: TextStyle(fontSize: 16.0))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("03-12-2019",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0)),
+                              Text("Payment",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      padding: EdgeInsets.only(
+                          top: 20.0, bottom: 20.0, left: 5.0, right: 5.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("L&T Vadodra",
+                                  style: TextStyle(fontSize: 16.0)),
+                              Text("₹ 170", style: TextStyle(fontSize: 16.0))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("15-02-2020",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0)),
+                              Text("Payment",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                // SizedBox(
+                //   height: 200,
+                // ),
               ],
             ),
           ),
@@ -459,4 +546,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+}
+
+class ModelServices {
+  String title, img;
+
+  ModelServices({this.title, this.img});
 }

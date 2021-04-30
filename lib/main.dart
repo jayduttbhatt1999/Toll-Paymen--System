@@ -20,7 +20,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
      // title: 'Opening View',
-      home: LoginScreen(),
+      home: SplashScreen(),
+      routes: <String, WidgetBuilder> {
+        '/register': (BuildContext context) => new RegisterPage()
+      },
     );
   }
 }

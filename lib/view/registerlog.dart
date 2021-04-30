@@ -3,10 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'home.dart';
 import 'login.dart';
 import 'register.dart';
-
+import 'verify.dart';
 class RegisterPage1 extends StatefulWidget {
   @override
   _RegisterPage1State createState() => _RegisterPage1State();
@@ -15,12 +16,14 @@ class RegisterPage1 extends StatefulWidget {
 enum FormType { register }
 
 class _RegisterPage1State extends State<RegisterPage1> {
+
   static final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  // TextEditingController _emailController = new TextEditingController();
+  // TextEditingController _passwordController = new TextEditingController();
   TextEditingController _repasswordController = new TextEditingController();
   String email, password;
+  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final logo = Image.asset(
@@ -29,51 +32,61 @@ class _RegisterPage1State extends State<RegisterPage1> {
     );
     final mq = MediaQuery.of(context);
     final auth = FirebaseAuth.instance;
-    final emailField = TextField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyle(
-        color: Colors.white,
-      ),
-      cursorColor: Colors.white,
-      decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
+    final emailField = Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: TextField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+            ),
+          ),
+          hintText: "something@email.com",
+          labelText: "Email",
+          labelStyle: TextStyle(
             color: Colors.white,
+            fontFamily: 'robo'
+          ),
+          hintStyle: TextStyle(
+            color: Colors.white60,
+              fontFamily: 'robo'
           ),
         ),
-        hintText: "something@example.com",
-        labelText: "Email",
-        labelStyle: TextStyle(
-          color: Colors.white,
-        ),
-        hintStyle: TextStyle(
-          color: Colors.white,
-        ),
+        onChanged: (value) {
+          setState(() {
+            email = value.trim();
+          });
+        },
       ),
     );
 
-    final passwordField = TextField(
-      obscureText: true,
-      controller: _passwordController,
-      style: TextStyle(
-        color: Colors.white,
-      ),
-      cursorColor: Colors.white,
-      decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
+    final passwordField =  Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: TextField(
+        obscureText: true,
+        decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+            ),
+          ),
+          hintText: "Enter your password",
+          labelText: "Password",
+          labelStyle: TextStyle(
+              color: Colors.white,
+              fontFamily: 'robo'
+          ),
+          hintStyle: TextStyle(
+              color: Colors.white60,
+              fontFamily: 'robo'
           ),
         ),
-        hintText: "password",
-        labelText: "Password",
-        labelStyle: TextStyle(
-          color: Colors.white,
-        ),
-        hintStyle: TextStyle(
-          color: Colors.white,
-        ),
+        onChanged: (value) {
+          setState(() {
+            password = value.trim();
+          });
+        },
       ),
     );
 
@@ -108,7 +121,6 @@ class _RegisterPage1State extends State<RegisterPage1> {
         children: <Widget>[
           emailField,
           passwordField,
-          repasswordField,
         ],
       ),
     );
@@ -130,13 +142,15 @@ class _RegisterPage1State extends State<RegisterPage1> {
           ),
         ),
         onPressed: () async {
-          UserCredential user =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => RegisterPage()));
+          try {
+            await auth.createUserWithEmailAndPassword(email: email, password: password).then((_) {
+              //success
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => VerifyScreen()));
+            });
+          } on FirebaseAuthException catch (e) {
+            Fluttertoast.showToast(msg: e.message, gravity: ToastGravity.TOP);
+          }
         },
       ),
     );
@@ -176,13 +190,22 @@ class _RegisterPage1State extends State<RegisterPage1> {
       ],
     );
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.blueGrey[600],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          "Information Register",
+          style:
+          TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
           child: Container(
-            height: mq.size.height,
+            padding: EdgeInsets.only(right: 10,left: 10),
+            height: 600,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[

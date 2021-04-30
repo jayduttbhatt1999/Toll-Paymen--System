@@ -5,7 +5,6 @@ import 'package:vtps/view/registerlog.dart';
 import 'login.dart';
 import 'dart:async';
 
-
 class SplashScreen extends StatefulWidget {
   final Color backgroundColor = Colors.white;
   final TextStyle styleTextUnderTheLoader = TextStyle(
@@ -16,13 +15,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   final splashDelay = 3;
 
   @override
   void initState() {
     super.initState();
-
     _loadWidget();
   }
 
@@ -32,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
   }
 
   @override
@@ -51,9 +49,34 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-
-                        ]
+                        children: <Widget>[
+                          SizedBox(height: 70,),
+                          Text("Vehicle", style: TextStyle(
+                            color: Colors.blueGrey[200],
+                            fontSize: 60,
+                            fontFamily: 'vtks_distress',
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          SizedBox(height: 20,),
+                          Text("Toll", style: TextStyle(
+                            color: Colors.blueGrey[200],
+                            fontSize: 60,
+                            fontFamily: 'vtks_distress',
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          Text("Payment", style: TextStyle(
+                            color: Colors.blueGrey[200],
+                            fontSize: 60,
+                            fontFamily: 'vtks_distress',
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          Text("System", style: TextStyle(
+                            color: Colors.blueGrey[200],
+                            fontSize: 60,
+                            fontFamily: 'vtks_distress',
+                            fontWeight: FontWeight.w500,
+                          ),),
+                        ],
                       )),
                 ),
                 Expanded(
